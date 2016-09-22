@@ -21,6 +21,7 @@ public class SampleBot extends AdvancedRobot {
     private final static int STATE_SCANING = 0;
 
     private int state = STATE_SCANING;
+	private int direction = 1;
 
     private Map<String, Double> knownLocations = new HashMap<String, Double>();
 
@@ -32,7 +33,7 @@ public class SampleBot extends AdvancedRobot {
             startScan();
             while (true) {
                 //Add your execute methods here
-                this.setTurnRadarLeftRadians(Math.PI * 2.0);
+                //this.setTurnRadarLeftRadians(Math.PI * 2.0);
 
                 double gunHeading = getGunHeading();
                 double bestDist = 2.0 * Math.PI;
@@ -44,7 +45,9 @@ public class SampleBot extends AdvancedRobot {
                 }
                 if (Double.compare(Math.abs(bestDist), 0.001f) < 0) {
                     fire(1);
-                }
+                } else {
+				    turnGunRightRadians(bestDist * direction);
+				}
               execute();
             }
         } catch (RuntimeException re) {
@@ -60,8 +63,8 @@ public class SampleBot extends AdvancedRobot {
     //Initialization process
     //If you have data structures or preprocessing before the match
     private void initComponents() {
-        setAdjustGunForRobotTurn(true);
-        setAdjustRadarForGunTurn(true);
+        setAdjustGunForRobotTurn(false);
+        setAdjustRadarForGunTurn(false);
     }
 
     //Fancy colours for your bot
@@ -73,8 +76,8 @@ public class SampleBot extends AdvancedRobot {
 
     //When you scan an opponent do something
     public void onScannedRobot(ScannedRobotEvent e) {
-        knownLocations.put(e.getName(), e.getHeadingRadians());
-        //fire(1);
+        knownLocations.put(e.getName(), getRadarHeadingRadians() + e.getHeadingRadians());
+        fire(1);
     }
 
 
@@ -102,7 +105,7 @@ public class SampleBot extends AdvancedRobot {
     //You hit someone with your gun, make sure to use that to your advantage
     public void onBulletHit(BulletHitEvent e) {
         try {
-
+			direction = -1 * direction;
         } catch (RuntimeException re) {
             logAndRethrowException(re);
         }
