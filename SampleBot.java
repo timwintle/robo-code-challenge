@@ -15,7 +15,7 @@ import java.awt.*;
 
 /**
  * Sample Template Bot for the internal Grad Challenge
- * Written by V.Boshnakov (Adapted from the THGBotD Official Challanger (Hard)
+ * (Adapted from the THGBotD Official Challanger (Hard)
  *
  *
  * NOTES:
